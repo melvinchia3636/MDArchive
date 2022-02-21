@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-ignore
+import CTP from "convert-chinese-to-pinyin";
+
 export default function process(input: string) {
   const menus = ["", ""];
   let isCodeBlock = false;
   let topLevel = NaN;
   let previous = null;
 
-  for (const line of input.split("\n")) {
+  for (const [index, line] of input.split("\n").entries()) {
 
     const trimmed = line.trim();
     
@@ -42,12 +46,9 @@ export default function process(input: string) {
         topLevel = level;
       }
 
-      const link = title.toLocaleLowerCase()
-        .replace(/\s/g, "-")
-        .replace(/[^A-Za-z0-9-_]/g, "");
+      const link = CTP(title)+"-"+index;
       const menu = `${"  ".repeat(level - topLevel)}- [${title}](#${link})`;
       menus.push(menu);
-
       previous = null;
     } else {
       previous = trimmed;
