@@ -40,7 +40,7 @@ function HeadingRenderer(props: any) {
   const slug = `${CTP(text)}-${props.node.position ? props.node.position.start.line - 1 : 'footnote'}`;
 
   useEffect(() => {
-    if (isVisible) navigate(`#${slug}`);
+    if (isVisible && !slug.endsWith('-footnote')) navigate(`#${slug}`);
   }, [isVisible]);
 
   return createElement(`h${props.level}`, { id: slug, ref }, props.children);

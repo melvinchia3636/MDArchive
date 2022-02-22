@@ -102,7 +102,7 @@ a[aria-describedby="footnote-label"] {
         @apply list-none my-0;
 
         & a {
-            @apply text-sm no-underline font-normal text-neutral-600 dark:text-neutral-100 relative h-full py-2 flex;
+            @apply text-sm no-underline font-normal text-neutral-600 dark:text-neutral-100 relative h-full py-3 flex;
             
             &::after {
                 content: "";

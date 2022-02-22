@@ -5,6 +5,7 @@
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+
 import { IFileData } from '../interfaces';
 
 function FolderChooser({ data }: { data: IFileData[] }) {
@@ -12,7 +13,7 @@ function FolderChooser({ data }: { data: IFileData[] }) {
   const params = useParams();
 
   return (
-    <div className={`${isExpand ? 'max-h-screen' : 'max-h-9'} w-full duration-700 overflow-hidden transition-all -mt-2 pb-1 border-b dark:border-neutral-700`}>
+    <div className={`${isExpand ? 'max-h-screen' : 'max-h-9'} w-full !duration-700 overflow-hidden !transition-all -mt-2 pb-1 border-b dark:border-neutral-700`}>
       <div className="flex justify-center items-center">
         <button type="button" onClick={() => setExpand(!isExpand)} className="uppercase font-medium text-xs flex items-center gap-1 -mr-1">
           {data.filter((e) => e.id === params.folder)[0]?.name.replace(/-/g, ' ')}

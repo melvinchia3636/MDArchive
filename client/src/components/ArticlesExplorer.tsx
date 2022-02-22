@@ -2,41 +2,27 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-filename-extension */
 /* eslint-disable no-restricted-globals */
+
 import { Icon } from '@iconify/react';
-import React, { Dispatch, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import React, { Dispatch } from 'react';
+import { Link, useParams } from 'react-router-dom';
+
 import { IFileData } from '../interfaces';
+
 import FolderChooser from './FolderChooser';
 
-function ArticlesExplorer({ setTheme, theme }: {
+function ArticlesExplorer({
+  setTheme,
+  theme,
+  folders,
+  files,
+}: {
     theme: string,
-    setTheme: Dispatch<any>
+    setTheme: Dispatch<any>,
+    folders: IFileData[],
+    files: IFileData[],
   }) {
   const params = useParams();
-  const [folders, setFolders] = useState<IFileData[]>([]);
-  const [files, setFiles] = useState<IFileData[]>([]);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    fetch('https://api.mdarchive.thecodeblog.net/folder/list')
-      .then((res) => res.json())
-      .then((d: IFileData[]) => {
-        setFolders(d);
-        if (params.folder === 'null') {
-          navigate(`/${d[0].id}/null/articles`);
-        }
-      });
-
-    fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
-      .then((res) => res.json())
-      .then((d: IFileData[]) => setFiles(d));
-  }, []);
-
-  useEffect(() => {
-    fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
-      .then((res) => res.json())
-      .then((d: IFileData[]) => setFiles(d));
-  }, [params.folder]);
 
   return (
     <div>

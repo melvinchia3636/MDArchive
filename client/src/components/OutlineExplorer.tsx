@@ -4,6 +4,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/no-children-prop */
 /* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/jsx-filename-extension */
 
 import { Icon } from '@iconify/react';
 import { Dispatch } from 'react';
@@ -11,7 +12,6 @@ import ReactMarkdown from 'react-markdown';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import TOC from '../toc';
 
-/* eslint-disable react/jsx-filename-extension */
 function OutlineExplorer({ content, theme, setTheme }: {
     content: string,
     theme: string,

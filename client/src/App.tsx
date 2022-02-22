@@ -1,26 +1,28 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-/* eslint-disable no-undef */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/jsx-filename-extension */
-/* eslint-disable react/no-children-prop */
+
 import React, {
   useEffect, useState,
 } from 'react';
 import {
-  Navigate, Route, Routes, useParams,
+  Navigate, Route, Routes, useNavigate, useParams,
 } from 'react-router-dom';
+
 import ArticlesExplorer from './components/ArticlesExplorer';
 import ContentExplorer from './components/ContentExplorer';
 import OutlineExplorer from './components/OutlineExplorer';
+import { IFileData } from './interfaces';
 
 function Main() {
   const params = useParams();
+  const navigate = useNavigate();
+
   const [content, setContent] = useState('');
   const [theme, setTheme] = useState(localStorage.theme);
+
+  const [folders, setFolders] = useState<IFileData[]>([]);
+  const [files, setFiles] = useState<IFileData[]>([]);
 
   useEffect(() => {
     if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -40,6 +42,13 @@ function Main() {
   }, [theme]);
 
   useEffect(() => {
+    setFiles([]);
+    fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
+      .then((res) => res.json())
+      .then((d: IFileData[]) => setFiles(d));
+  }, [params.folder]);
+
+  useEffect(() => {
     setContent('');
     if (params.file !== 'null') {
       fetch(`https://api.mdarchive.thecodeblog.net/file/content/${params.file}`)
@@ -49,18 +58,32 @@ function Main() {
   }, [params.file]);
 
   useEffect(() => {
-    setContent('');
+    fetch('https://api.mdarchive.thecodeblog.net/folder/list')
+      .then((res) => res.json())
+      .then((d: IFileData[]) => {
+        setFolders(d);
+        if (params.folder === 'null') {
+          navigate(`/${d[0].id}/null/articles`);
+        }
+      });
     if (params.file !== 'null') {
-      fetch(`https://api.mdarchive.thecodeblog.net/file/content/${params.file}`)
-        .then((res) => res.text())
-        .then((d) => setContent(d));
+      fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
+        .then((res) => res.json())
+        .then((d: IFileData[]) => setFiles(d));
     }
   }, []);
 
   return (
     <div className="App flex">
       <div className="flex-shrink-0 flex-auto toc w-[26%] py-6 h-screen overflow-y-auto overflow-x-hidden border-r-[1.6px] border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800">
-        {params.section === 'articles' ? <ArticlesExplorer setTheme={setTheme} theme={theme} /> : ''}
+        {params.section === 'articles' ? (
+          <ArticlesExplorer
+            setTheme={setTheme}
+            theme={theme}
+            folders={folders}
+            files={files}
+          />
+        ) : ''}
         {params.section === 'outline' ? <OutlineExplorer content={content} setTheme={setTheme} theme={theme} /> : ''}
       </div>
       <ContentExplorer content={content} />

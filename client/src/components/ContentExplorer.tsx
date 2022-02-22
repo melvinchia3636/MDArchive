@@ -12,11 +12,11 @@ import remarkGfm from 'remark-gfm';
 import remarkSectionize from 'remark-sectionize';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 // @ts-ignore
-import { atomOneLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 // @ts-ignore
 import emoji from 'emoji-dictionary';
-
 import { Icon } from '@iconify/react';
+
 import HeadingRenderer from './HeadingRenderer';
 
 function ContentExplorer({ content }: { content: string }) {
@@ -39,15 +39,15 @@ function ContentExplorer({ content }: { content: string }) {
               const match = /language-(\w+)/.exec(className || '');
               return !inline && match ? (
                 <SyntaxHighlighter
-                  children={String(children).replace(/\n$/, '')}
-                  style={atomOneLight}
+                  style={atomOneDarkReasonable}
                   customStyle={{
                     backgroundColor: 'transparent',
                   }}
                   language={match[1]}
-                  PreTag="div"
                   {...props}
-                />
+                >
+                  {children.join('').replace(/\n$/, '')}
+                </SyntaxHighlighter>
               ) : (
                 <code className={className} {...props}>
                   {children}
