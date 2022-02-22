@@ -17,7 +17,7 @@ p, li {
 }
 
 img {
-    @apply rounded-md
+    @apply rounded-md w-full pt-4
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -123,4 +123,8 @@ a[aria-describedby="footnote-label"] {
 .active-section, .active-section * {
     font-weight: 500 !important;
     @apply text-neutral-800 dark:text-amber-500 #{!important};
+}
+
+sup a {
+    @apply no-underline text-xs
 }
