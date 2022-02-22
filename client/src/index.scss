@@ -9,6 +9,7 @@
     font-size: 1.1rem;
     letter-spacing: 1px;
     @apply scroll-smooth text-[18px];
+    @apply transition-colors duration-500 #{!important};
 }
 
 p, li {
@@ -68,11 +69,11 @@ table {
 }
 
 table tr {
-    @apply border-b py-6 relative;
+    @apply border-b dark:border-neutral-700 py-6 relative;
 
     &::after {
         content: "";
-        @apply w-full border-b absolute -bottom-[0.8rem] left-0
+        @apply w-full border-b dark:border-neutral-700 absolute -bottom-[0.8rem] left-0
     }
 }
 
@@ -85,11 +86,11 @@ strong {
 }
 
 pre {
-    @apply bg-neutral-200 p-4 rounded-md
+    @apply bg-neutral-200 dark:bg-neutral-700 p-4 rounded-md overflow-x-scroll
 }
 
 code, code * {
-    @apply text-sm font-["Source_Code_Pro"]
+    @apply text-sm font-["Source_Code_Pro"] dark:text-neutral-100
 }
 
 a[aria-describedby="footnote-label"] {
@@ -101,15 +102,15 @@ a[aria-describedby="footnote-label"] {
         @apply list-none my-0;
 
         & a {
-            @apply text-sm no-underline font-normal text-neutral-600 relative h-full py-2 flex;
+            @apply text-sm no-underline font-normal text-neutral-600 dark:text-neutral-100 relative h-full py-2 flex;
             
             &::after {
                 content: "";
-                @apply bg-neutral-100 w-[999px] h-full z-[-1] absolute -left-64 top-1/2 -translate-y-1/2 transition-all
+                @apply bg-neutral-100 dark:bg-transparent w-[999px] h-full z-[-1] absolute -left-64 top-1/2 -translate-y-1/2 transition-all duration-500
             }
 
             &:hover::after {
-                @apply bg-neutral-200 
+                @apply bg-neutral-200
             }
 
             & * {
@@ -121,5 +122,5 @@ a[aria-describedby="footnote-label"] {
 
 .active-section, .active-section * {
     font-weight: 500 !important;
-    color: rgb(38 38 38) !important;
+    @apply text-neutral-800 dark:text-amber-500 #{!important};
 }

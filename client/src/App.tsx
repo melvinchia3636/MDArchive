@@ -6,12 +6,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/jsx-filename-extension */
-/* eslint-disable new-cap */
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable react/no-children-prop */
 import React, {
+  Dispatch,
   RefObject, useEffect, useRef, useState,
 } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -27,7 +24,7 @@ import { atomOneLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 // @ts-ignore
 import CTP from 'convert-chinese-to-pinyin';
 import {
-  Link, Route, Routes, useLocation, useNavigate, useParams,
+  Link, Navigate, Route, Routes, useNavigate, useParams,
 } from 'react-router-dom';
 import TOC from './toc';
 
@@ -76,17 +73,23 @@ function HeadingRenderer(props: any) {
   return React.createElement(`h${props.level}`, { id: slug, ref }, props.children);
 }
 
-function Outline({ content }: { content: string }) {
+function Outline({ content, theme, setTheme }: {
+  content: string,
+  theme: string,
+  setTheme: Dispatch<any>
+}) {
   const params = useParams();
 
   return (
     <div className="px-4">
       <div className="w-full flex items-center justify-between mb-6">
         <Link to={`/${params.folder}/${params.file}/articles${location.hash}`}>
-          <Icon icon="mdi:view-agenda-outline" className="w-4 h-4 text-neutral-700" />
+          <Icon icon="mdi:view-agenda-outline" className="w-4 h-4 text-neutral-700 dark:text-neutral-100" />
         </Link>
         <h1 className="font-medium text-base mt-0 mb-0 outline-none after:hidden">outline</h1>
-        <Icon icon="uil:brightness" className="w-[1.1rem] h-[1.1rem] text-neutral-700" />
+        <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+          <Icon icon={`uil:${theme === 'dark' ? 'moon' : 'brightness'}`} className="w-[1.1rem] h-[1.1rem] text-neutral-700 dark:text-neutral-100" />
+        </button>
       </div>
       <ReactMarkdown
         children={TOC(content)}
@@ -112,7 +115,7 @@ function FolderChooser({ data }: { data: IFileData[] }) {
   const params = useParams();
 
   return (
-    <div className={`${isExpand ? 'max-h-screen' : 'max-h-9'} w-full duration-700 overflow-hidden transition-all bg-neutral-100 -mt-2 pb-1 border-b`}>
+    <div className={`${isExpand ? 'max-h-screen' : 'max-h-9'} w-full duration-700 overflow-hidden transition-all -mt-2 pb-1 border-b dark:border-neutral-700`}>
       <div className="flex justify-center items-center">
         <button type="button" onClick={() => setExpand(!isExpand)} className="uppercase font-medium text-xs flex items-center gap-1 -mr-1">
           {data.filter((e) => e.id === params.folder)[0]?.name.replace(/-/g, ' ')}
@@ -121,12 +124,12 @@ function FolderChooser({ data }: { data: IFileData[] }) {
           </span>
         </button>
       </div>
-      <div className="flex flex-col mt-4 px-4 divide-y">
+      <div className="flex flex-col mt-4 px-4 divide-y dark:divide-neutral-700">
         {data.map(({ id, name }) => (
           <Link
             onClick={() => setExpand(false)}
             key={name}
-            className={`text-neutral-700 py-4 uppercase text-xs font-medium no-underline ${
+            className={`text-neutral-700 dark:text-neutral-100 py-4 uppercase text-xs font-medium no-underline ${
               name === params.folder ? 'font-semibold text-neutral-800' : ''
             }`}
             to={`/${id}/null/articles`}
@@ -139,23 +142,32 @@ function FolderChooser({ data }: { data: IFileData[] }) {
   );
 }
 
-function Files() {
+function Files({ setTheme, theme }: {
+  theme: string,
+  setTheme: Dispatch<any>
+}) {
   const params = useParams();
   const [folders, setFolders] = useState<IFileData[]>([]);
   const [files, setFiles] = useState<IFileData[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:3001/folder/list')
+    fetch('https://api.mdarchive.thecodeblog.net/folder/list')
       .then((res) => res.json())
-      .then((d: IFileData[]) => setFolders(d));
+      .then((d: IFileData[]) => {
+        setFolders(d);
+        if (params.folder === 'null') {
+          navigate(`/${d[0].id}/null/articles`);
+        }
+      });
 
-    fetch(`http://localhost:3001/file/list/${params.folder}`)
+    fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
       .then((res) => res.json())
       .then((d: IFileData[]) => setFiles(d));
   }, []);
 
   useEffect(() => {
-    fetch(`http://localhost:3001/file/list/${params.folder}`)
+    fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
       .then((res) => res.json())
       .then((d: IFileData[]) => setFiles(d));
   }, [params.folder]);
@@ -165,15 +177,17 @@ function Files() {
       <FolderChooser data={folders} />
       <div className="w-full flex items-center justify-between mb-6 px-4 mt-4">
         <Link to={`/${params.folder}/${params.file}/outline${location.hash}`}>
-          <Icon icon="mdi:format-list-bulleted" className="w-4 h-4 text-neutral-700" />
+          <Icon icon="mdi:format-list-bulleted" className="w-4 h-4 text-neutral-700 dark:text-neutral-100" />
         </Link>
         <h1 className="font-medium text-base mt-0 mb-0 outline-none after:hidden">articles</h1>
-        <Icon icon="uil:brightness" className="w-[1.1rem] h-[1.1rem] text-neutral-700" />
+        <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+          <Icon icon={`uil:${theme === 'dark' ? 'moon' : 'brightness'}`} className="w-[1.1rem] h-[1.1rem] text-neutral-700 dark:text-neutral-100" />
+        </button>
       </div>
-      <div className="divide-y mb-3">
+      <div className="divide-y dark:divide-neutral-700 mb-3 file-list">
         {files.map(({ id, name }) => (
-          <div className={`p-4 ${id === params.file ? 'border-l-4 border-l-amber-500' : ''}`} key={Math.random()}>
-            <Link to={`/${params.folder}/${id}/${params.section}`} className="text-sm no-underline text-neutral-700">
+          <div key={Math.random()}>
+            <Link to={`/${params.folder}/${id}/${params.section}`} className={`text-sm no-underline text-neutral-700 dark:text-neutral-100 p-4 ${id === params.file ? 'border-l-4 border-l-amber-500' : ''} block hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-all duration-300`}>
               {name.replace(/\.md$/, '')}
               <span className="text-neutral-300 text-xs ml-0.5">.md</span>
             </Link>
@@ -187,11 +201,29 @@ function Files() {
 function Main() {
   const params = useParams();
   const [content, setContent] = useState('');
+  const [theme, setTheme] = useState(localStorage.theme);
+
+  useEffect(() => {
+    if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.theme = theme;
+  }, [theme]);
 
   useEffect(() => {
     setContent('');
     if (params.file !== 'null') {
-      fetch(`http://localhost:3001/file/content/${params.file}`)
+      fetch(`https://api.mdarchive.thecodeblog.net/file/content/${params.file}`)
         .then((res) => res.text())
         .then((d) => setContent(d));
     }
@@ -200,7 +232,7 @@ function Main() {
   useEffect(() => {
     setContent('');
     if (params.file !== 'null') {
-      fetch(`http://localhost:3001/file/content/${params.file}`)
+      fetch(`https://api.mdarchive.thecodeblog.net/file/content/${params.file}`)
         .then((res) => res.text())
         .then((d) => setContent(d));
     }
@@ -208,9 +240,9 @@ function Main() {
 
   return (
     <div className="App flex">
-      <div className="flex-shrink-0 flex-auto toc w-[26%] py-6 h-screen overflow-y-auto overflow-x-hidden border-r-[1.6px] border-neutral-200">
-        {params.section === 'articles' ? <Files /> : ''}
-        {params.section === 'outline' ? <Outline content={content} /> : ''}
+      <div className="flex-shrink-0 flex-auto toc w-[26%] py-6 h-screen overflow-y-auto overflow-x-hidden border-r-[1.6px] border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800">
+        {params.section === 'articles' ? <Files setTheme={setTheme} theme={theme} /> : ''}
+        {params.section === 'outline' ? <Outline content={content} setTheme={setTheme} theme={theme} /> : ''}
       </div>
       <div className="px-32 flex-shrink py-12 flex-auto w-[74%] h-screen overflow-y-auto overflow-x-hidden flex flex-col">
         {content ? (
@@ -233,7 +265,7 @@ function Main() {
                     children={String(children).replace(/\n$/, '')}
                     style={atomOneLight}
                     customStyle={{
-                      backgroundColor: 'rgb(229 229 229)',
+                      backgroundColor: 'transparent',
                     }}
                     language={match[1]}
                     PreTag="div"
@@ -270,13 +302,9 @@ function Main() {
 }
 
 function App() {
-  const location = useLocation();
-  useEffect(() => {
-    window.addEventListener('hashchange', () => console.log('hashchange1', location.hash));
-  }, []);
-
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/null/null/articles" />} />
       <Route path="/:folder/:file/:section" element={<Main />} />
     </Routes>
   );
