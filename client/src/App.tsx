@@ -2,6 +2,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react/jsx-filename-extension */
 
+import { Icon } from '@iconify/react';
 import React, {
   useEffect, useState,
 } from 'react';
@@ -23,6 +24,8 @@ function Main() {
 
   const [folders, setFolders] = useState<IFileData[]>([]);
   const [files, setFiles] = useState<IFileData[]>([]);
+
+  const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
     if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -74,19 +77,32 @@ function Main() {
   }, []);
 
   return (
-    <div className="App flex">
-      <div className="flex-shrink-0 flex-auto toc w-[26%] py-6 h-screen overflow-y-auto overflow-x-hidden border-r-[1.6px] border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800">
+    <div className="App flex overflow-x-hidden">
+      <div className={`flex-shrink-0 flex-auto toc ${navOpen ? 'w-full' : 'w-0'} !transition-all !duration-500 lg:w-[26%] py-6 h-screen overflow-y-auto overflow-x-hidden border-r-[1.6px] border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800`}>
         {params.section === 'articles' ? (
           <ArticlesExplorer
             setTheme={setTheme}
             theme={theme}
             folders={folders}
             files={files}
+            setNavOpen={setNavOpen}
           />
         ) : ''}
-        {params.section === 'outline' ? <OutlineExplorer content={content} setTheme={setTheme} theme={theme} /> : ''}
+        {params.section === 'outline' ? (
+          <OutlineExplorer
+            content={content}
+            setTheme={setTheme}
+            theme={theme}
+            setNavOpen={setNavOpen}
+          />
+        ) : ''}
       </div>
-      <ContentExplorer content={content} />
+      <div className="flex-shrink w-full lg:w-[74%] flex-auto h-screen">
+        <button onClick={() => setNavOpen(!navOpen)} type="button" className="fixed bottom-0 shadow-md right-0 m-4 w-16 h-16 bg-amber-500 rounded-full flex items-center justify-center">
+          <Icon icon="uil:layer-group" className="w-6 h-6 text-neutral-100" />
+        </button>
+        <ContentExplorer content={content} />
+      </div>
     </div>
   );
 }

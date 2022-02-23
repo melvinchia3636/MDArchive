@@ -16,11 +16,13 @@ function ArticlesExplorer({
   theme,
   folders,
   files,
+  setNavOpen,
 }: {
     theme: string,
     setTheme: Dispatch<any>,
     folders: IFileData[],
     files: IFileData[],
+    setNavOpen: Dispatch<boolean>
   }) {
   const params = useParams();
 
@@ -39,7 +41,7 @@ function ArticlesExplorer({
       <div className="divide-y dark:divide-neutral-700 mb-3 file-list">
         {files.map(({ id, name }) => (
           <div key={Math.random()}>
-            <Link to={`/${params.folder}/${id}/${params.section}`} className={`text-sm no-underline text-neutral-700 dark:text-neutral-100 p-4 ${id === params.file ? 'border-l-4 border-l-amber-500' : ''} block hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-all duration-300`}>
+            <Link onClick={() => setNavOpen(false)} to={`/${params.folder}/${id}/${params.section}`} className={`text-sm no-underline text-neutral-700 dark:text-neutral-100 p-4 ${id === params.file ? 'border-l-4 border-l-amber-500' : ''} block hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-all duration-300`}>
               {name.replace(/\.md$/, '')}
               <span className="text-neutral-300 text-xs ml-0.5">.md</span>
             </Link>

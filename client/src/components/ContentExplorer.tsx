@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-undef */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
@@ -15,16 +16,19 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 // @ts-ignore
 import emoji from 'emoji-dictionary';
+// @ts-ignore
+import rehypeRaw from 'rehype-raw';
 import { Icon } from '@iconify/react';
 
 import HeadingRenderer from './HeadingRenderer';
 
 function ContentExplorer({ content }: { content: string }) {
   return (
-    <div className="px-32 flex-shrink py-12 flex-auto w-[74%] h-screen overflow-y-auto overflow-x-hidden flex flex-col">
+    <div className="px-8 sm:px-32 w-full h-full py-12 pb-32 overflow-y-auto overflow-x-hidden flex flex-col">
       {content ? (
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkSectionize]}
+          rehypePlugins={[rehypeRaw]}
           children={content.replace(/:\w+:/gi, (name: string) => emoji.getUnicode(name))}
           components={{
             h1: HeadingRenderer,

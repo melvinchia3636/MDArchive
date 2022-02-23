@@ -65,7 +65,7 @@ blockquote {
 }
 
 table {
-    @apply my-8 border-separate [border-spacing:1rem_1.2rem]
+    @apply my-8 border-separate [border-spacing:1rem_1.2rem] overflow-x-auto w-full
 }
 
 table tr {

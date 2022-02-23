@@ -12,10 +12,13 @@ import ReactMarkdown from 'react-markdown';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import TOC from '../toc';
 
-function OutlineExplorer({ content, theme, setTheme }: {
+function OutlineExplorer({
+  content, theme, setTheme, setNavOpen,
+}: {
     content: string,
     theme: string,
-    setTheme: Dispatch<any>
+    setTheme: Dispatch<any>,
+    setNavOpen: Dispatch<boolean>
   }) {
   const params = useParams();
   const location = useLocation();
@@ -36,6 +39,7 @@ function OutlineExplorer({ content, theme, setTheme }: {
         components={{
           a: (props: any): JSX.Element => (
             <a
+              onClick={() => setNavOpen(false)}
               href={props.href}
               target={!props.href.startsWith('#') ? '_blank' : ''}
               rel="noreferrer"
