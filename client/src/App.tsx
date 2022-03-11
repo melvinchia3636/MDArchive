@@ -46,7 +46,7 @@ function Main() {
 
   useEffect(() => {
     setFiles([]);
-    fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
+    fetch(`http://localhost:3001/file/list/${params.folder}`)
       .then((res) => res.json())
       .then((d: IFileData[]) => setFiles(d));
   }, [params.folder]);
@@ -54,14 +54,14 @@ function Main() {
   useEffect(() => {
     setContent('');
     if (params.file !== 'null') {
-      fetch(`https://api.mdarchive.thecodeblog.net/file/content/${params.file}`)
+      fetch(`http://localhost:3001/file/content/${params.file}`)
         .then((res) => res.text())
         .then((d) => setContent(d));
     }
   }, [params.file]);
 
   useEffect(() => {
-    fetch('https://api.mdarchive.thecodeblog.net/folder/list')
+    fetch('http://localhost:3001/folder/list')
       .then((res) => res.json())
       .then((d: IFileData[]) => {
         setFolders(d);
@@ -70,7 +70,7 @@ function Main() {
         }
       });
     if (params.file !== 'null') {
-      fetch(`https://api.mdarchive.thecodeblog.net/file/list/${params.folder}`)
+      fetch(`http://localhost:3001/file/list/${params.folder}`)
         .then((res) => res.json())
         .then((d: IFileData[]) => setFiles(d));
     }
