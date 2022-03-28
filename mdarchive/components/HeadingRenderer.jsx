@@ -1,12 +1,13 @@
 /* eslint-disable react/destructuring-assignment */
 import {
-  Children, createElement, RefObject, useEffect, useRef, useState,
+  Children, createElement, useEffect, useRef, useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
 // @ts-ignore
 import CTP from 'convert-chinese-to-pinyin';
+import { useRouter } from 'next/router';
+import isElementInViewport from '../inViewPort';
 
-function useOnScreen(ref: RefObject<any>) {
+function useOnScreen(ref) {
   const [isIntersecting, setIntersecting] = useState(false);
 
   const observer = new IntersectionObserver(
@@ -24,23 +25,31 @@ function useOnScreen(ref: RefObject<any>) {
   return isIntersecting;
 }
 
-function flatten(text: string, child: any): any {
+function flatten(text, child) {
   return typeof child === 'string'
     ? text + child
     : Children.toArray(child.props.children).reduce(flatten, text);
 }
 
-function HeadingRenderer(props: any) {
+function HeadingRenderer(props) {
   const ref = useRef();
   const isVisible = useOnScreen(ref);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const children = Children.toArray(props.children);
   const text = children.reduce(flatten, '');
   const slug = `${CTP(text)}-${props.node.position ? props.node.position.start.line - 1 : 'footnote'}`;
 
   useEffect(() => {
-    if (isVisible && !slug.endsWith('-footnote')) navigate(`#${slug}`);
+    history.scrollRestoration = 'manual';
+    if (!slug.endsWith('-footnote')) {
+      for (const el of document.querySelector(".content").querySelectorAll("h1, h2, h3, h4, h5, h6")) {
+        if (isElementInViewport(el)) {
+          history.pushState(null, null, "#"+el.id)
+          break;
+        }
+      }
+    };
   }, [isVisible]);
 
   return createElement(`h${props.level}`, { id: slug, ref }, props.children);

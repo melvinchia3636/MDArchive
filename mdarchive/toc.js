@@ -2,7 +2,7 @@
 // @ts-ignore
 import CTP from "convert-chinese-to-pinyin";
 
-export default function process(input: string) {
+export default function process(input) {
   const menus = ["", ""];
   let isCodeBlock = false;
   let topLevel = NaN;
