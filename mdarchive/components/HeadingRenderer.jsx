@@ -1,8 +1,6 @@
-/* eslint-disable react/destructuring-assignment */
 import {
   Children, createElement, useEffect, useRef, useState,
 } from 'react';
-// @ts-ignore
 import CTP from 'convert-chinese-to-pinyin';
 import { useRouter } from 'next/router';
 import isElementInViewport from '../inViewPort';

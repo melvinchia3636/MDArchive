@@ -7,11 +7,19 @@
 
 * {
     font-family: 'Zen Kaku Gothic New', sans-serif;
-    font-size: 1.1rem;
     letter-spacing: 1px;
-    @apply scroll-smooth text-[18px];
-    @apply transition-colors duration-500 #{!important};
+    @apply scroll-smooth text-base md:text-[18px];
+    @apply transition-[background-color] duration-500 #{!important};
 }
+
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 
 body {
   @apply bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-100;

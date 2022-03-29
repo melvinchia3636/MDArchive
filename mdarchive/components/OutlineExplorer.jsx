@@ -1,15 +1,6 @@
-/* eslint-disable no-undef */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable import/extensions */
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react/no-children-prop */
-/* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable react/jsx-filename-extension */
-
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import Link from 'next/link';
 import TOC from '../toc';
 
 function OutlineExplorer({

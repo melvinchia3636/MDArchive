@@ -1,22 +1,10 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-undef */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable import/extensions */
-/* eslint-disable react/no-children-prop */
-/* eslint-disable react/no-unstable-nested-components */
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-// @ts-ignore
 import remarkSectionize from 'remark-sectionize';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-// @ts-ignore
 import { atomOneDarkReasonable } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
-// @ts-ignore
 import emoji from 'emoji-dictionary';
-// @ts-ignore
 import rehypeRaw from 'rehype-raw';
 import { Icon } from '@iconify/react';
 

@@ -1,8 +1,3 @@
-/* eslint-disable import/extensions */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable react/jsx-filename-extension */
-/* eslint-disable no-restricted-globals */
-
 import { Icon } from '@iconify/react';
 import React from 'react';
 import Link from 'next/link';

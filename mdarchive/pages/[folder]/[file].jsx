@@ -71,6 +71,7 @@ function Articles({ folder, file, folders, files }) {
     <div className="App flex overflow-x-hidden">
       <Head>
         <title>{file !== "null" ? files.filter(e => e.id === file)[0].name+" - " : ""}MDArchive</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={`flex-shrink-0 flex-auto toc ${navOpen ? 'w-full' : 'w-0'} !transition-all !duration-500 lg:w-[26%] py-6 h-screen overflow-y-auto overflow-x-hidden border-r-[1.6px] border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800`}>
         {section === 'articles' ? (
