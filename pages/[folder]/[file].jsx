@@ -61,7 +61,7 @@ function Articles({ folder, file, folders, files }) {
   useEffect(() => {
     setContent('');
     if (file !== 'null') {
-      fetch(`http://localhost:3000/api/content/${folder}/${file}`)
+      fetch(`/api/content/${folder}/${file}`)
         .then((res) => res.text())
         .then((d) => setContent(d));
     }

@@ -9,7 +9,6 @@ function SearchBox({ searchBoxOpen, setSearchBoxOpen }) {
         setSearchBoxOpen(false);
       }
     });
-    fetch("http://localhost:3001/file/list")
   }, []);
 
   useEffect(() => {
