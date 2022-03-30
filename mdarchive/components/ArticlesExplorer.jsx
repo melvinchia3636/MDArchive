@@ -28,10 +28,10 @@ function ArticlesExplorer({
         </button>
       </div>
       <div className="divide-y dark:divide-neutral-700 mb-3 file-list">
-        {files.map(({ id, name }) => (
+        {files.map(({ _id, name }) => (
           <div key={Math.random()}>
-            <Link href={`/${folder}/${id}`}>
-              <div onClick={() => setNavOpen(false)} className={`text-sm no-underline cursor-pointer text-neutral-700 dark:text-neutral-100 p-4 ${id === file ? 'border-l-4 border-l-amber-500' : ''} block hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all duration-300`}>
+            <Link href={`/${folder}/${_id}`}>
+              <div onClick={() => setNavOpen(false)} className={`text-sm no-underline cursor-pointer text-neutral-700 dark:text-neutral-100 p-4 ${_id === file ? 'border-l-4 border-l-amber-500' : ''} block hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-all duration-300`}>
                 {name.replace(/\.md$/, '')}
                 <span className="text-neutral-300 text-xs ml-0.5">.md</span>
               </div>

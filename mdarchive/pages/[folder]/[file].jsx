@@ -6,6 +6,9 @@ import OutlineExplorer from "../../components/OutlineExplorer.jsx";
 import ArticlesExplorer from "../../components/ArticlesExplorer.jsx";
 import ContentExplorer from "../../components/ContentExplorer.jsx";
 import Head from 'next/head';
+import SearchBox from '../../components/SearchBox.jsx';
+
+import { MongoClient } from 'mongodb';
 
 export const getStaticPaths = async () => ({
   paths: [], // indicates that no page needs be created at build time
@@ -14,18 +17,22 @@ export const getStaticPaths = async () => ({
 
 export async function getStaticProps(context) {
   const { folder, file } = context.params;
-  
-  const folders = await fetch('https://api.mdarchive.thecodeblog.net/folder/list').then((res) => res.json())
+  const db = await MongoClient.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+  });;
+  const notes = await db.db("notes")
+  const folders = await notes.listCollections().toArray();
   let files = []
-  if (folder !== "null") files = await fetch(`https://api.mdarchive.thecodeblog.net/file/list/${folder}`).then((res) => res.json())
-  console.log(folder, file)
-  return { props: { folder, file, folders, files } };
+  if (folder !== "null") files = await notes.collection(folder).find({}).toArray();
+  db.close();
+  return { props: { folder, file, folders: folders.map(e => e.name), files: files.map(e => ({...e, _id: e._id.toString(), content: null})) } };
 }
 
 function Articles({ folder, file, folders, files }) {
   const router = useRouter();
 
   const [navOpen, setNavOpen] = useState(false);
+  const [searchBoxOpen, setSearchBoxOpen] = useState(false);
   const [section, setSection] = useState("articles");
 
   const [content, setContent] = useState("");
@@ -54,7 +61,7 @@ function Articles({ folder, file, folders, files }) {
   useEffect(() => {
     setContent('');
     if (file !== 'null') {
-      fetch(`https://api.mdarchive.thecodeblog.net/file/content/${file}`)
+      fetch(`http://localhost:3000/api/content/${folder}/${file}`)
         .then((res) => res.text())
         .then((d) => setContent(d));
     }
@@ -63,14 +70,28 @@ function Articles({ folder, file, folders, files }) {
 
   useEffect(() => {
     if (folder === 'null') {
-      router.push(`/${folders[0].id}/null`);
+      router.replace(`/${encodeURIComponent(folders[0])}/null`);
     }
+    
+    document.addEventListener('keydown', (e) => {
+      if (navigator.oscpu.includes('Mac')) {
+        if (e.metaKey && e.key === 'p') {
+          e.preventDefault()
+          setSearchBoxOpen(true)
+        }
+      } else {
+        if (e.ctrlKey && e.key === 'p') {
+          e.preventDefault()
+          setSearchBoxOpen(true)
+        }
+      }
+    })
   }, []);
 
   return (
     <div className="App flex overflow-x-hidden">
       <Head>
-        <title>{file !== "null" ? files.filter(e => e.id === file)[0].name+" - " : ""}MDArchive</title>
+        <title>{file !== "null" ? files.filter(e => e._id === file)[0].name+" - " : ""}MDArchive</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div className={`flex-shrink-0 flex-auto toc ${navOpen ? 'w-full' : 'w-0'} !transition-all !duration-500 lg:w-[26%] py-6 h-screen overflow-y-auto overflow-x-hidden border-r-[1.6px] border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800`}>
@@ -104,6 +125,7 @@ function Articles({ folder, file, folders, files }) {
         </button>
         <ContentExplorer content={content} file={file} />
       </div>
+      <SearchBox searchBoxOpen={searchBoxOpen} setSearchBoxOpen={setSearchBoxOpen} />
     </div>
   )
 }
