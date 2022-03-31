@@ -29,21 +29,12 @@ body {
   & :is(ul, li) {
       @apply list-none my-0;
 
-      & :is(li) {
+      & li {
           @apply pl-4;
       }
 
       & a {
-          @apply text-sm no-underline font-normal text-neutral-600 dark:text-neutral-100 relative h-full py-3 flex;
-          
-          &::after {
-              content: "";
-              @apply bg-neutral-100 dark:bg-transparent w-[999px] h-full z-[-1] absolute -left-64 top-1/2 -translate-y-1/2 transition-all duration-500
-          }
-
-          &:hover::after {
-              @apply bg-neutral-200
-          }
+          @apply text-sm no-underline font-normal text-neutral-600 py-3 flex;
 
           & * {
               @apply font-normal text-sm
@@ -54,5 +45,9 @@ body {
 
 .active-section, .active-section * {
   font-weight: 500 !important;
-  @apply text-neutral-800 dark:text-amber-500 #{!important};
+  @apply text-neutral-800 dark:text-amber-500 relative #{!important};
+}
+
+.active-section::before {
+  @apply content-[''] h-full absolute top-0 left-0 float-left border-r-2 border-amber-500
 }

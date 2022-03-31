@@ -43,7 +43,7 @@ function HeadingRenderer(props) {
     if (!slug.endsWith('-footnote')) {
       for (const el of document.querySelector(".content").querySelectorAll("h1, h2, h3, h4, h5, h6")) {
         if (isElementInViewport(el)) {
-          history.pushState(null, null, "#"+el.id)
+          props.setCurrent(el.id)
           break;
         }
       }

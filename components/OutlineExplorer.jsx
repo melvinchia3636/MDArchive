@@ -4,17 +4,36 @@ import ReactMarkdown from 'react-markdown';
 import TOC from '../toc';
 
 function OutlineExplorer({
-  content, theme, setTheme, setNavOpen, setSection
+  content, theme, setTheme, setNavOpen, setSection, current
 }) {
-  const [current, setCurrent] = useState('');
+
+  const [parents, setParents] = useState([])
+
   useEffect(() => {
-    window.addEventListener('pushState', function(e) {
-      setCurrent(window.location.hash)
-    });
-  }, []);
+    if (current) {
+      const p = []
+      let parent = document.querySelector(`.toc [href="#${current}"]`);
+      while (true) {
+        parent = parent.closest("ul").previousElementSibling;
+        if (parent.tagName === "A") {
+          parent.classList.add("active-section");
+          p.push("#"+parent.href.split("#")[1]);
+        } else {
+          break;
+        }
+      }
+      p.unshift("#"+current)
+      setParents(p)
+    }
+  }, [current])
+
+  useEffect(() => {
+    console.log(parents)
+  }, [parents]);
+
   return (
-    <div className="px-4">
-      <div className="w-full flex items-center justify-between mb-6">
+    <div className="relative">
+      <div className="w-full px-4 flex items-center justify-between mb-6">
         <button onClick={() => setSection("articles")}>
           <Icon icon="mdi:view-agenda-outline" className="w-4 h-4 text-neutral-700 dark:text-neutral-100" />
         </button>
@@ -32,11 +51,15 @@ function OutlineExplorer({
               href={props.href}
               target={!props.href.startsWith('#') ? '_blank' : ''}
               rel="noreferrer"
-              className={`break-all ${props.href === current ? 'active-section' : ''}`}
+              className={`break-all ${(props.href.slice(1) === current) || parents.includes(props.href) ? 'active-section' : ''}`}
+              style={{
+                marginLeft: parents.includes(props.href) ? -parents.length + parents.indexOf(props.href) + 1 + 'rem' : '0',
+                paddingLeft: parents.includes(props.href) ? parents.length - parents.indexOf(props.href) + 'rem' : '1rem',
+              }}
             >
               {props.children}
             </a>
-          ),
+          )
         }}
       />
     </div>

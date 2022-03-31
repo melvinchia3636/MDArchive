@@ -38,6 +38,8 @@ function Articles({ folder, file, folders, files }) {
   const [content, setContent] = useState("");
   const [theme, setTheme] = useState("no");
 
+  const [current, setCurrent] = useState("");
+
   useEffect(() => {
     setTheme(localStorage.theme);
     if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -116,6 +118,7 @@ function Articles({ folder, file, folders, files }) {
             folder={folder}
             file={file}
             setSection={setSection}
+            current={current}
           />
         ) : ''}
       </div>
@@ -123,7 +126,7 @@ function Articles({ folder, file, folders, files }) {
         <button onClick={() => setNavOpen(!navOpen)} type="button" className="fixed bottom-0 z-[9999] flex lg:hidden shadow-md right-0 m-4 w-16 h-16 bg-amber-500 rounded-full items-center justify-center">
           <Icon icon="uil:layer-group" className="w-6 h-6 text-neutral-100" />
         </button>
-        <ContentExplorer content={content} file={file} />
+        <ContentExplorer content={content} file={file} setCurrent={setCurrent} />
       </div>
       <SearchBox searchBoxOpen={searchBoxOpen} setSearchBoxOpen={setSearchBoxOpen} />
     </div>
