@@ -10,12 +10,7 @@ import SearchBox from '../../components/SearchBox.jsx';
 
 import { MongoClient } from 'mongodb';
 
-export const getStaticPaths = async () => ({
-  paths: [], // indicates that no page needs be created at build time
-  fallback: 'blocking', // indicates the type of fallback
-});
-
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   const { folder, file } = context.params;
   const db = await MongoClient.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
