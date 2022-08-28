@@ -5,10 +5,28 @@
 @tailwind utilities;
 @tailwind components;
 
+@font-face {
+  font-family: MiSans;
+  src: url('/public/fonts/MiSans-Normal.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: MiSans;
+  src: url('/public/fonts/MiSans-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: MiSans;
+  src: url('/public/fonts/MiSans-Semibold.ttf');
+  font-weight: 600;
+}
+
 * {
-    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-family: 'MiSans', sans-serif;
     letter-spacing: 1px;
-    @apply scroll-smooth text-base md:text-[18px];
+    @apply scroll-smooth text-base font-normal md:text-[18px];
     @apply transition-[background-color] duration-500 #{!important};
 }
 

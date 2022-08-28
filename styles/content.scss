@@ -1,6 +1,6 @@
 .content {
     & p, & li {
-        @apply leading-[1.8em] my-4
+        @apply leading-[1.8em] my-2
     }
     
     & img {
@@ -36,11 +36,11 @@
     }
     
     & ul {
-        @apply list-disc list-outside pl-4 my-4
+        @apply list-disc list-outside pl-4 my-2
     }
     
     & ol {
-        @apply list-decimal list-outside pl-4 my-4
+        @apply list-decimal list-outside pl-4 my-2
     }
     
     & a {
@@ -85,5 +85,9 @@
     
     & sup a {
         @apply no-underline text-xs
+    }
+
+    & strong {
+        @apply font-semibold
     }
 }
